@@ -52,8 +52,12 @@ void DashboardMonitor::loop() {
                      + surg_.busy     + ortho_.busy      + cardio_.busy;
 
         /* ---------- ekran ---------- */
-        std::cout << "\033[2J\033[H"
-                  << CLR_YELLOW
+#ifdef _WIN32
+        system("cls");
+#else
+        std::cout << "\033[2J\033[H" << std::flush;
+#endif
+        std::cout << CLR_YELLOW
                   << "==================== S O R    D A S H B O A R D ====================\n"
                   << "Czas symulacji: " << simTime
                   << "   Aktywni pacjenci: " << std::setw(4) << active << "\n\n";
