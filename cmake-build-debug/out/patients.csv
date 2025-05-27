@@ -1,33 +1,75 @@
 id;choroby;priorytet;oddzial;sprzet;czas_leczenia_ms;czas_oczek_ms
-9;Uszkodzenie więzadeł;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|BLOOD;12797;0
-1;Kamica nerkowa;ZOLTY;Chirurgia;CT|BLOOD;19442;13
-2;Skręcenie kostki;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|USG;19286;0
-8;Niewydolność serca;ZIELONY;Kardiologia;EKG|ECHO|DEFIB|VENT;13412;0
-19;Ból w klatce;ZIELONY;Kardiologia;EKG|LAB;7016;0
-3;Ból kręgosłupa;ZIELONY;Ortopedia;OR|VENT|USG;22463;0
-18;Przełom nadciśnieniowy;ZIELONY;Kardiologia;EKG|VENT;16740;5
-7;Skręcenie kostki;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|LAB|USG;22901;5
-16;Zawał serca|Zapalenie wyrostka;ZIELONY;Kardiologia;EKG|ECHO|LAB|BLOOD;20806;0
-11;Niewydolność serca;ZIELONY;Kardiologia;EKG|ECHO|LAB|NEURO|USG;25874;0
-29;Niewydolność serca|Kardiomiopatia;ZIELONY;Kardiologia;EKG|NEURO;10232;0
-5;Zapalenie wyrostka;ZOLTY;Chirurgia;CT|LAB|USG;33555;0
-26;Zawał serca;ZIELONY;Kardiologia;EKG|DEFIB|VENT|NEURO;18483;0
-25;Skręcenie kostki;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|LAB|BLOOD;18910;0
-20;Przełom nadciśnieniowy;ZIELONY;Kardiologia;EKG|ECHO|VENT|USG;26263;0
-31;Kardiomiopatia;ZIELONY;Kardiologia;EKG|DEFIB|NEURO;13664;1844
-30;Arytmia;NIEBIESKI;Kardiologia;EKG|ECHO|DEFIB;10024;5733
-13;Kamica nerkowa|Kolka żółciowa;CZERWONY;Chirurgia;CT|LAB|BLOOD;34820;0
-36;Złamanie szyjki kości;ZIELONY;Ortopedia;OR;14030;0
-6;Kamica nerkowa;ZIELONY;Chirurgia;CT|VENT|DIAL|BLOOD|NEURO;39688;0
-35;Ból kręgosłupa|Złamanie szyjki kości;CZERWONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|USG;16970;0
-4;Kamica nerkowa|Przepuklina;ZIELONY;Chirurgia;CT|VENT|LAB|BLOOD;45685;0
-10;Krwotok wewnętrzny;ZOLTY;Chirurgia;CT|LAB|ENDO;41580;0
-21;Skręcenie kostki;NIEBIESKI;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|DIAL|LAB|BLOOD;34003;0
-14;Złamanie ręki;CZERWONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|VENT|BLOOD|USG;40699;0
-12;Arytmia|Zapalenie wyrostka;ZOLTY;Kardiologia;EKG|ECHO|VENT|DIAL;41824;0
-24;Kamica nerkowa;ZOLTY;Chirurgia;CT|BLOOD;15524;16680
-23;Krwotok wewnętrzny;ZOLTY;Chirurgia;CT|VENT|BLOOD;38982;2490
-47;Kardiomiopatia;ZIELONY;Kardiologia;EKG|ECHO|ENDO|NEURO;21732;1239
-17;Zwichnięcie barku|Przepuklina;ZOLTY;Chirurgia;ANEST|OR|ICU;54009;0
-46;Zawał serca;NIEBIESKI;Kardiologia;EKG|ECHO|DIAL|LAB|NEURO;27482;0
-32;Złamanie ręki;CZERWONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|VENT|DIAL|LAB;43269;0
+1;Przełom nadciśnieniowy;NIEBIESKI;Kardiologia;EKG|ECHO;11035;0
+3;Ból w klatce;CZERWONY;Kardiologia;EKG|DEFIB|BLOOD|USG;11420;0
+4;Przełom nadciśnieniowy;ZIELONY;Kardiologia;EKG|ECHO|LAB;12394;0
+8;Omdlenie|Niewydolność serca;ZOLTY;Kardiologia;EKG|LAB;9656;0
+7;Zwichnięcie barku;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET;15164;0
+6;Krwotok wewnętrzny;NIEBIESKI;Chirurgia;CT;17069;0
+5;Ból kręgosłupa;NIEBIESKI;Ortopedia;OR|USG;18170;0
+2;Kamica nerkowa;ZIELONY;Chirurgia;ANEST|OR|VENT|BLOOD;27259;0
+10;Uraz jamy brzusznej;ZOLTY;Chirurgia;CT|ENDO;18668;0
+13;Ból kręgosłupa;ZIELONY;Ortopedia;OR|NEURO;19045;0
+11;Niedrożność jelit;NIEBIESKI;Chirurgia;CT|BLOOD;23435;0
+9;Kamica nerkowa;ZIELONY;Chirurgia;ANEST|OR|LAB;26674;0
+29;Ból w klatce;ZOLTY;Kardiologia;EKG|ECHO|LAB;15356;0
+40;Uszkodzenie więzadeł;CZERWONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET;12032;0
+35;Ból w klatce;ZIELONY;Kardiologia;EKG|ECHO;14884;0
+20;Przełom nadciśnieniowy;NIEBIESKI;Kardiologia;EKG|DIAL|ENDO;25878;0
+16;Kamica nerkowa;ZIELONY;Chirurgia;CT|ENDO|NEURO|USG;31545;0
+42;Ból w klatce;ZIELONY;Kardiologia;EKG|DEFIB|VENT|BLOOD;13552;0
+12;Złamanie szyjki kości;CZERWONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|DIAL|LAB;36645;0
+27;Złamanie ręki;ZOLTY;Ortopedia;OR|LAB|BLOOD|NEURO;25159;0
+14;Przepuklina;ZOLTY;Chirurgia;CT|VENT;36696;0
+43;Kardiomiopatia;ZIELONY;Kardiologia;EKG|ECHO|USG;17361;0
+15;Ból kręgosłupa;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|DIAL|LAB|BLOOD;39393;0
+38;Niewydolność serca;ZOLTY;Kardiologia;EKG|ECHO|BLOOD|ENDO;22617;0
+33;Uszkodzenie więzadeł;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|VENT|LAB;26460;0
+41;Ból kręgosłupa;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|VENT;22530;0
+17;Zapalenie wyrostka;NIEBIESKI;Chirurgia;CT;42683;0
+44;Zwichnięcie barku;NIEBIESKI;Ortopedia;OR|VENT|LAB|BLOOD;25967;0
+66;Kardiomiopatia;ZIELONY;Kardiologia;EKG;6044;0
+57;Arytmia;ZIELONY;Kardiologia;EKG|DEFIB|LAB|BLOOD;15828;0
+28;Złamanie szyjki kości;ZIELONY;Ortopedia;OR|BLOOD|ENDO|USG;39901;1
+49;Zawał serca;NIEBIESKI;Kardiologia;EKG|ECHO|DIAL;26433;0
+22;Przepuklina;ZOLTY;Chirurgia;CT|LAB|BLOOD|ENDO;45910;2338
+47;Arytmia|Przepuklina;ZIELONY;Kardiologia;EKG|ECHO|DEFIB|VENT;29620;0
+56;Arytmia;ZIELONY;Kardiologia;EKG|VENT|LAB;21838;8
+52;Złamanie szyjki kości;ZOLTY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|VENT|USG;27024;6
+21;Omdlenie;NIEBIESKI;Kardiologia;EKG|DIAL|LAB;52254;0
+62;Kardiomiopatia;ZIELONY;Kardiologia;EKG|ECHO|DEFIB|DIAL;20260;0
+51;Arytmia;ZOLTY;Kardiologia;EKG|ECHO|DEFIB|LAB|USG;30289;0
+54;Złamanie nogi;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|VENT;23481;3916
+23;Uraz jamy brzusznej|Uszkodzenie więzadeł;CZERWONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|VENT|BLOOD|ENDO;54997;0
+24;Kamica nerkowa;ZOLTY;Chirurgia;CT;46403;9299
+64;Złamanie szyjki kości;NIEBIESKI;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|BLOOD|USG;21583;3
+25;Kolka żółciowa;CZERWONY;Chirurgia;CT|VENT|LAB;53584;2669
+45;Przepuklina;ZOLTY;Chirurgia;CT|VENT|BLOOD;34460;10030
+75;Omdlenie;ZIELONY;Kardiologia;EKG|ECHO|LAB;13764;0
+61;Zapalenie wyrostka|Kolka żółciowa;ZOLTY;Chirurgia;ANEST|OR|ENDO;25838;4812
+50;Omdlenie|Przepuklina;ZOLTY;Chirurgia;CT|VENT;33791;8829
+53;Uszkodzenie więzadeł;ZIELONY;Ortopedia;OR|LAB|BLOOD|ENDO;45464;78
+36;Niedrożność jelit|Złamanie ręki;CZERWONY;Chirurgia;CT|USG;54713;4812
+89;Przełom nadciśnieniowy;ZIELONY;Kardiologia;EKG|VENT;11922;0
+80;Uszkodzenie więzadeł;ZOLTY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|LAB|BLOOD;18402;494
+58;Skręcenie kostki;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|DIAL;41495;3617
+63;Złamanie szyjki kości|Kamica nerkowa;ZOLTY;Ortopedia;OR|DIAL|LAB|ENDO;41352;58
+55;Złamanie nogi|Niewydolność serca;ZOLTY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|LAB;47009;1122
+78;Złamanie szyjki kości;CZERWONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|VENT|NEURO|USG;25855;45
+81;Zawał serca;ZIELONY;Kardiologia;EKG|LAB|BLOOD|ENDO;25977;0
+18;Niedrożność jelit;ZIELONY;Chirurgia;CT|LAB;86514;1
+72;Uszkodzenie więzadeł;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|LAB|USG;25670;12759
+84;Złamanie ręki;ZIELONY;Ortopedia;OR;13017;18707
+69;Ból kręgosłupa;ZOLTY;Ortopedia;OR|DIAL|NEURO;47455;1596
+92;Zwichnięcie barku;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET;13090;5058
+68;Zawał serca;CZERWONY;Kardiologia;EKG|DEFIB|VENT|LAB;50589;0
+30;Uraz jamy brzusznej;ZIELONY;Chirurgia;CT|LAB|ENDO;32382;52917
+77;Ból kręgosłupa;ZIELONY;Ortopedia;OR|VENT|LAB;23114;19785
+31;Uraz jamy brzusznej;ZOLTY;Chirurgia;CT|USG;76863;9663
+85;Omdlenie;NIEBIESKI;Kardiologia;EKG|ECHO|VENT|DIAL|BLOOD;38868;0
+94;Zwichnięcie barku;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|LAB;19785;2006
+19;Krwotok wewnętrzny;ZOLTY;Chirurgia;CT;98296;0
+83;Uszkodzenie więzadeł;ZIELONY;Ortopedia;XRAY|TRAUMA_KIT|ORTHO_SET|ENDO;23632;17946
+26;Zapalenie wyrostka;ZIELONY;Chirurgia;ANEST|OR|VENT|LAB;50041;45607
+86;Złamanie szyjki kości;ZIELONY;Ortopedia;OR|VENT;25157;19298
+90;Krwotok wewnętrzny;ZOLTY;Chirurgia;CT|DIAL;35171;3569
+32;Przepuklina;ZIELONY;Chirurgia;ANEST|OR|DIAL|BLOOD|USG;45026;52842

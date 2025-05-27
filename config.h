@@ -19,9 +19,9 @@ struct Config
     double pBlue   = .20;
 
     /* ---------- staff ---------- */
-    int chirurg      = 8;
-    int ortopeda     = 6;
-    int kardiolog    = 7;
+    int chirurg      = 10;
+    int ortopeda     = 10;
+    int kardiolog    = 10;
     int consultSurg  = 4;
     int consultCard  = 3;
 
@@ -37,8 +37,8 @@ struct Config
     int vent         = 2;
     int dial         = 1;
     int endo         = 1;
-    int lab          = 3;
-    int blood        = 4;
+    int lab          = 1;
+    int blood        = 2;
     int neuro        = 1;
     int traumaKit    = 3;
     int orthoSet     = 2;
