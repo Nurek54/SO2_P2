@@ -4,6 +4,7 @@
 #include "config.h"
 #include <map>
 #include <string>
+#include <vector>
 #include <mutex>
 #include <condition_variable>
 
@@ -23,7 +24,6 @@ public:
     int  available() const;
 };
 
-/* ───────────── ResourceManager ───────────── */
 class ResourceManager
 {
     std::map<std::string, Semaphore> sem_;
@@ -45,6 +45,8 @@ public:
     int  getAvailable (const std::string& k) const { return available(k);  }
     double getUtilization(const std::string& k) const;
 
+    /* nowe dla detektora deadlockow */
+    std::vector<std::string> getAllKeys() const;
 };
 
 /* globalny uchwyt dla lekarzy  */

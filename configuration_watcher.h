@@ -7,7 +7,7 @@
 class ConfigurationWatcher {
 public:
     explicit ConfigurationWatcher(const std::string& path);
-    /// Zwraca wartość klucza (pusty string, jeśli brak).
+    // Zwraca wartość klucza (pusty string, jeśli brak).
     const std::string& get(const std::string& key) const;
 
 private:

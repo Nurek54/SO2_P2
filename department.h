@@ -30,6 +30,9 @@ public:
     int  getServed()       const { return served.load(); }
 
     void join();
+
+    void applyAging();
+
 };
 
 #endif /* SOR_DEPARTMENT_H */

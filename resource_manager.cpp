@@ -1,15 +1,15 @@
 #include "resource_manager.h"
 
-/* ─────────── globalny wskaźnik ─────────── */
 ResourceManager* gResMgr = nullptr;
 
-/* ------------- Semaphore ------------- */
+/* ───────────── Semaphore ───────────── */
 void Semaphore::acquire(int n)
 {
     std::unique_lock<std::mutex> lk(mtx_);
     cv_.wait(lk, [&]{ return count_ >= n; });
     count_ -= n;
 }
+
 void Semaphore::release(int n)
 {
     {
@@ -18,36 +18,62 @@ void Semaphore::release(int n)
     }
     cv_.notify_all();
 }
+
 int Semaphore::available() const
 {
     std::lock_guard<std::mutex> lk(mtx_);
     return count_;
 }
 
-/* ------------- ResourceManager ------------- */
+/* ───────────── ResourceManager ───────────── */
 ResourceManager::ResourceManager(const Config& c)
 {
     auto add = [&](const std::string& k, int n)
     {
-        sem_.try_emplace(k, n);   // tu powstaje Semaphore
+        sem_.try_emplace(k, n);
         total_.emplace(k, n);
     };
 
-    add("CT"   , c.ct);
-    add("XRAY" , c.xray);
-    add("USG"  , c.usg);
-    add("OR"   , c.oroom);
-    add("ANEST", c.anest);
-    add("ICU"  , c.icuBeds);
+    add("CT"        , c.ct);
+    add("XRAY"      , c.xray);
+    add("USG"       , c.usg);
+    add("OR"        , c.oroom);
+    add("ANEST"     , c.anest);
+    add("ICU"       , c.icuBeds);
+    add("DEFIB"     , c.defib);
+    add("ECHO"      , c.echo);
+    add("VENT"      , c.vent);
+    add("DIAL"      , c.dial);
+    add("ENDO"      , c.endo);
+    add("LAB"       , c.lab);
+    add("BLOOD"     , c.blood);
+    add("NEURO"     , c.neuro);
+    add("TRAUMA_KIT", c.traumaKit);
+    add("ORTHO_SET" , c.orthoSet);
+    add("EKG"       , c.ekg);
 
     gResMgr = this;
 }
 
-void ResourceManager::acquire(const std::string& k, int n) { sem_.at(k).acquire(n); }
-void ResourceManager::release(const std::string& k, int n) { sem_.at(k).release(n); }
+void ResourceManager::acquire(const std::string& k, int n) {
+    sem_.at(k).acquire(n);
+}
+
+void ResourceManager::release(const std::string& k, int n) {
+    sem_.at(k).release(n);
+}
 
 double ResourceManager::getUtilization(const std::string& k) const
 {
     int tot = total(k);
     return tot ? static_cast<double>(inUse(k)) / tot : 0.0;
+}
+
+/* ───────────── Używane przez DeadlockDetector ───────────── */
+std::vector<std::string> ResourceManager::getAllKeys() const
+{
+    std::vector<std::string> keys;
+    for (const auto& [k, _] : sem_)
+        keys.push_back(k);
+    return keys;
 }

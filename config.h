@@ -7,38 +7,48 @@
 struct Config
 {
     /* ---------- arrival ---------- */
-    double lambdaPerSec      = 1.0;   // Średnia liczba przyjęć pacjentów na sekundę
-    bool   massEnabled       = false; // Czy włączyć zdarzenie masowe (masowy wypadek)
-    int    massAtSec         = 0.0;     // Po ilu sekundach od startu następuje zdarzenie masowe
-    double massRatePerSec    = 0.0;   // Tempo nowych pacjentów podczas masowego wypadku (pacjentów/sekundę)
+    double lambdaPerSec      = 1.0;
+    bool   massEnabled       = false;
+    int    massAtSec         = 2;
+    double massRatePerSec    = 100.0;
 
     /* ---------- triage_distribution ---------- */
-    double pRed    = .10;   // Prawdopodobieństwo przydzielenia pacjentowi priorytetu czerwonego (R)
-    double pYellow = .20;   // Prawdopodobieństwo przydzielenia priorytetu żółtego (Y)
-    double pGreen  = .50;   // Prawdopodobieństwo przydzielenia priorytetu zielonego (G)
-    double pBlue   = .20;   // Prawdopodobieństwo przydzielenia priorytetu niebieskiego (B)
+    double pRed    = .10;
+    double pYellow = .20;
+    double pGreen  = .50;
+    double pBlue   = .20;
 
     /* ---------- staff ---------- */
-    int chirurg      = 4;   // Liczba lekarzy na oddziale chirurgii
-    int ortopeda     = 3;   // Liczba lekarzy na oddziale ortopedii
-    int kardiolog    = 4;   // Liczba lekarzy na oddziale kardiologii
-    int consultSurg  = 4;   // Liczba konsultantów chirurgicznych (wzywanych z innych oddziałów)
-    int consultCard  = 3;   // Liczba konsultantów kardiologicznych
+    int chirurg      = 8;
+    int ortopeda     = 6;
+    int kardiolog    = 7;
+    int consultSurg  = 4;
+    int consultCard  = 3;
 
     /* ---------- equipment ---------- */
-    int ct           = 2;   // Liczba dostępnych urządzeń CT (tomograf komputerowy)
-    int xray         = 3;   // Liczba dostępnych aparatów RTG
-    int usg          = 1;   // Liczba dostępnych urządzeń USG
-    int oroom        = 2;   // Liczba sal operacyjnych
-    int anest        = 4;   // Liczba anestezjologów
-    int icuBeds      = 3;   // Liczba dostępnych łóżek na OIOM
+    int ct           = 2;
+    int xray         = 3;
+    int usg          = 1;
+    int oroom        = 2;
+    int anest        = 4;
+    int icuBeds      = 3;
+    int defib        = 2;
+    int echo         = 1;
+    int vent         = 2;
+    int dial         = 1;
+    int endo         = 1;
+    int lab          = 3;
+    int blood        = 4;
+    int neuro        = 1;
+    int traumaKit    = 3;
+    int orthoSet     = 2;
+    int ekg          = 2;
 
     /* ---------- timeouts ---------- */
-    int deadlockMs   = 8000; // Maksymalny czas (w ms) zanim uznamy, że zaszło zakleszczenie (deadlock)
-    int backoffMinMs = 1000; // Minimalny czas (w ms) losowego opóźnienia przed ponowną próbą po rollbacku
-    int backoffMaxMs = 3000; // Maksymalny czas (w ms) losowego opóźnienia przed ponowną próbą po rollbacku
+    int deadlockMs   = 8000;
+    int backoffMinMs = 1000;
+    int backoffMaxMs = 3000;
 
-    /*  Ładuje wartości z pliku via ConfigurationWatcher */
     static Config load(const ConfigurationWatcher& w);
 };
 

@@ -1,6 +1,8 @@
 #include "hospital.h"
+#include "patient_logger.h"  // <<<<<< DODANE
 #include <chrono>
 #include <iostream>
+#include <csignal>
 
 Hospital* Hospital::gInstance_ = nullptr;
 
@@ -19,6 +21,9 @@ Hospital::Hospital(const Config& cfg)
 {
     gInstance_ = this;
     std::signal(SIGINT, &Hospital::onSignal);
+
+    // << uruchamiamy logger pacjentów >>
+    gPatientLogger.start();
 }
 
 /* ───────────── run ───────────── */
@@ -33,16 +38,22 @@ void Hospital::run()
 
     arrival_.join();
     triage_.join();
-    surg_.join(); ortho_.join(); cardio_.join();
+    surg_.join();
+    ortho_.join();
+    cardio_.join();
     deadlock_.join();
     metrics_.join();
     monitor_.join();
 
+    //zatrzymujemy logger i wypisujemy podsumowanie
+    gPatientLogger.stop();
+    gPatientLogger.summary(std::cout);
+
     std::cout << "Koniec symulacji.\n";
 }
 
-/* ───────────── SIGINT handler ───────────── */
 void Hospital::onSignal(int)
 {
-    if (gInstance_) gInstance_->stop();
+    if (gInstance_)
+        gInstance_->stop();
 }

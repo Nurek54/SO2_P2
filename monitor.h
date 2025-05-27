@@ -12,28 +12,32 @@
 
 class DashboardMonitor
 {
-    ArrivalDispatcher& arrival_;
-    Triage&            triage_;
-    Department&        surg_;
-    Department&        ortho_;
-    Department&        cardio_;
-    ResourceManager&   rm_;
-    std::atomic<bool>& running_;
+    ArrivalDispatcher&                         arrival_;
+    Triage&                                    triage_;
+    Department&                                surg_;
+    Department&                                ortho_;
+    Department&                                cardio_;
+    ResourceManager&                           rm_;
+    std::atomic<bool>&                         running_;
 
-    std::thread        th_;
-    std::chrono::steady_clock::time_point start_;
+    std::thread                                th_;
+    std::chrono::steady_clock::time_point      start_;
 
-    void           loop();
-    static std::string hhmmss(std::chrono::seconds);
+    void loop();
+    static std::string hhmmss(std::chrono::seconds s);
 
 public:
-    DashboardMonitor(ArrivalDispatcher& a, Triage& t,
-                     Department& s, Department& o, Department& c,
-                     ResourceManager& rm, std::atomic<bool>& run);
+    DashboardMonitor(ArrivalDispatcher& a,
+                     Triage& t,
+                     Department& s,
+                     Department& o,
+                     Department& c,
+                     ResourceManager& rm,
+                     std::atomic<bool>& run);
     void join();
 };
 
-/* alias dla zachowania starej nazwy */
+/* alias, by nadal móc pisać Monitor */
 using Monitor = DashboardMonitor;
 
 #endif /* SOR_MONITOR_H */

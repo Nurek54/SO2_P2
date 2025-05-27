@@ -133,6 +133,12 @@ build CMakeFiles/SO2_P2.dir/config.cpp.obj: CXX_COMPILER__SO2_P2_unscanned_Debug
   OBJECT_DIR = CMakeFiles\SO2_P2.dir
   OBJECT_FILE_DIR = CMakeFiles\SO2_P2.dir
 
+build CMakeFiles/SO2_P2.dir/patient_logger.cpp.obj: CXX_COMPILER__SO2_P2_unscanned_Debug C$:/Users/g_sie/OneDrive/Pulpit/SO2_P2/patient_logger.cpp || cmake_object_order_depends_target_SO2_P2
+  DEP_FILE = CMakeFiles\SO2_P2.dir\patient_logger.cpp.obj.d
+  FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\SO2_P2.dir
+  OBJECT_FILE_DIR = CMakeFiles\SO2_P2.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target SO2_P2
@@ -141,7 +147,7 @@ build CMakeFiles/SO2_P2.dir/config.cpp.obj: CXX_COMPILER__SO2_P2_unscanned_Debug
 #############################################
 # Link the executable SO2_P2.exe
 
-build SO2_P2.exe: CXX_EXECUTABLE_LINKER__SO2_P2_Debug CMakeFiles/SO2_P2.dir/main.cpp.obj CMakeFiles/SO2_P2.dir/safe_queue.cpp.obj CMakeFiles/SO2_P2.dir/resource_manager.cpp.obj CMakeFiles/SO2_P2.dir/configuration_watcher.cpp.obj CMakeFiles/SO2_P2.dir/registrar.cpp.obj CMakeFiles/SO2_P2.dir/arrival_dispatcher.cpp.obj CMakeFiles/SO2_P2.dir/triage.cpp.obj CMakeFiles/SO2_P2.dir/department.cpp.obj CMakeFiles/SO2_P2.dir/doctor.cpp.obj CMakeFiles/SO2_P2.dir/deadlock_detector.cpp.obj CMakeFiles/SO2_P2.dir/metrics_collector.cpp.obj CMakeFiles/SO2_P2.dir/monitor.cpp.obj CMakeFiles/SO2_P2.dir/hospital.cpp.obj CMakeFiles/SO2_P2.dir/config.cpp.obj
+build SO2_P2.exe: CXX_EXECUTABLE_LINKER__SO2_P2_Debug CMakeFiles/SO2_P2.dir/main.cpp.obj CMakeFiles/SO2_P2.dir/safe_queue.cpp.obj CMakeFiles/SO2_P2.dir/resource_manager.cpp.obj CMakeFiles/SO2_P2.dir/configuration_watcher.cpp.obj CMakeFiles/SO2_P2.dir/registrar.cpp.obj CMakeFiles/SO2_P2.dir/arrival_dispatcher.cpp.obj CMakeFiles/SO2_P2.dir/triage.cpp.obj CMakeFiles/SO2_P2.dir/department.cpp.obj CMakeFiles/SO2_P2.dir/doctor.cpp.obj CMakeFiles/SO2_P2.dir/deadlock_detector.cpp.obj CMakeFiles/SO2_P2.dir/metrics_collector.cpp.obj CMakeFiles/SO2_P2.dir/monitor.cpp.obj CMakeFiles/SO2_P2.dir/hospital.cpp.obj CMakeFiles/SO2_P2.dir/config.cpp.obj CMakeFiles/SO2_P2.dir/patient_logger.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\SO2_P2.dir

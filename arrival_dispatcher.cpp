@@ -36,7 +36,7 @@ void ArrivalDispatcher::loop()
             massFired = true;
             int perSec = static_cast<int>(cfg_.massRatePerSec);
             std::cout << "[ArrivalDispatcher] zdarzenie masowe! +" << perSec
-                      << " pacjentów/s\n";
+                      << " pacjentow/s\n";
             for (int i = 0; i < perSec; ++i) {
                 triage_.newPatient(nextId++);
                 ++totalArrived_;

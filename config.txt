@@ -1,4 +1,5 @@
-# config.txt  ─ zapisujemy tylko raz, bez dalszego live-reloadu
+# config.txt — zapisujemy tylko raz, bez dalszego live-reloadu
+
 arrival.lambda_per_sec                 = 0.8
 arrival.mass_casualty.enabled          = true
 arrival.mass_casualty.at_second        = 300
@@ -21,6 +22,17 @@ equipment.usg                          = 1
 equipment.or                           = 2
 equipment.anesthesiologist             = 2
 equipment.icu_beds                     = 5
+equipment.defib                        = 2
+equipment.echo                         = 1
+equipment.vent                         = 2
+equipment.dial                         = 1
+equipment.endo                         = 1
+equipment.lab                          = 2
+equipment.blood                        = 3
+equipment.neuro                        = 1
+equipment.trauma_kit                   = 2
+equipment.ortho_set                    = 2
+equipment.ekg                          = 2
 
 timeouts.deadlock_ms                   = 8000
 timeouts.backoff_min_ms                = 1000

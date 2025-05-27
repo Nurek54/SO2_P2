@@ -31,4 +31,6 @@ add_executable(SO2_P2 main.cpp
         hospital.cpp
         hospital.h
         config.cpp
-        config.h)
+        config.h
+        patient_logger.cpp
+        patient_logger.h)
