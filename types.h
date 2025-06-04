@@ -2,7 +2,7 @@
 #define SOR_TYPES_H
 #include <string>
 
-enum class Priority { RED = 0, YELLOW, GREEN, BLUE };   // +BLUE
+enum class Priority { RED = 0, YELLOW, GREEN, BLUE };
 enum class DepartmentID { SURGERY = 0, ORTHOPEDIC, CARDIO };
 
 inline std::string toStr(Priority p)

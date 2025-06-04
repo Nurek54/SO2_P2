@@ -8,21 +8,23 @@
 #include "department.h"
 #include "resource_manager.h"
 
-class MetricsCollector
-{
+class MetricsCollector {
     std::atomic<bool>& running_;
     const Config&      cfg_;
-    Department& surg_;
-    Department& ortho_;
-    Department& cardio_;
-    ResourceManager& rm_;
+    Department&        surg_;
+    Department&        ortho_;
+    Department&        cardio_;
+    ResourceManager&   rm_;
 
     std::thread        th_;
     std::ofstream      out_;
 
 public:
-    MetricsCollector(std::atomic<bool>& run, const Config& cfg,
-                     Department& s, Department& o, Department& c,
+    MetricsCollector(std::atomic<bool>& run,
+                     const Config& cfg,
+                     Department& s,
+                     Department& o,
+                     Department& c,
                      ResourceManager& rm);
 
     void join();

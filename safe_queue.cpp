@@ -40,10 +40,12 @@ size_t SafeQueue::size() const {
 
 std::array<int, 4> SafeQueue::priorityCounts() const {
     std::lock_guard<std::mutex> lk(mtx);
-    return { int(queues[0].size()),
-             int(queues[1].size()),
-             int(queues[2].size()),
-             int(queues[3].size()) };
+    return {
+            int(queues[0].size()),
+            int(queues[1].size()),
+            int(queues[2].size()),
+            int(queues[3].size())
+    };
 }
 
 bool SafeQueue::peekFront(int prio, Patient& out) const {
@@ -64,7 +66,7 @@ void SafeQueue::promoteFront(int fromPrio) {
     queues[fromPrio - 1].push_back(p);
 }
 
-void SafeQueue::applyAging(const std::chrono::seconds threshold[4],
+void SafeQueue::applyAging(const std::chrono::milliseconds threshold[4],
                            const std::chrono::steady_clock::time_point& now)
 {
     std::lock_guard<std::mutex> lk(mtx);

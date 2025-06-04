@@ -1,12 +1,12 @@
 #include "hospital.h"
-#include "patient_logger.h"  // <<<<<< DODANE
+#include "patient_logger.h"
 #include <chrono>
 #include <iostream>
 #include <csignal>
+#include <limits> // dla std::numeric_limits
 
 Hospital* Hospital::gInstance_ = nullptr;
 
-/* ───────────── ctor ───────────── */
 Hospital::Hospital(const Config& cfg)
         : cfg_(cfg),
           resMgr_(cfg_),
@@ -22,17 +22,29 @@ Hospital::Hospital(const Config& cfg)
     gInstance_ = this;
     std::signal(SIGINT, &Hospital::onSignal);
 
-    // << uruchamiamy logger pacjentów >>
     gPatientLogger.start();
 }
 
-/* ───────────── run ───────────── */
 void Hospital::run()
 {
     std::cout << "\n=== SYMULACJA START ===  (Ctrl+C aby zatrzymać)\n";
 
-    while (running_)
-        std::this_thread::sleep_for(std::chrono::seconds(1));
+    while (running_) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+        if (cfg_.maxPatients > 0) {
+            // ✅ poprawka: zliczaj tylko pacjentów obsłużonych przez lekarzy
+            int totalHandled = surg_.getServed()
+                               + ortho_.getServed()
+                               + cardio_.getServed();
+
+            if (totalHandled >= cfg_.maxPatients) {
+                std::cout << "[Hospital] Wszyscy pacjenci (" << totalHandled
+                          << "/" << cfg_.maxPatients << ") zostali obsłużeni.\n";
+                running_ = false;
+            }
+        }
+    }
 
     std::cout << "\nZatrzymywanie...\n";
 
@@ -45,11 +57,14 @@ void Hospital::run()
     metrics_.join();
     monitor_.join();
 
-    //zatrzymujemy logger i wypisujemy podsumowanie
     gPatientLogger.stop();
     gPatientLogger.summary(std::cout);
 
     std::cout << "Koniec symulacji.\n";
+
+    std::cout << "\nWciśnij ENTER, aby zakończyć...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.get();
 }
 
 void Hospital::onSignal(int)

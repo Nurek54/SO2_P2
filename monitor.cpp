@@ -1,7 +1,9 @@
 #include "monitor.h"
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 #include "patient_logger.h"
+#include "resource_manager.h"
 
 #define CLR_RESET    "\033[0m"
 #define CLR_BOLD     "\033[1m"
@@ -40,52 +42,54 @@ void DashboardMonitor::loop() {
     using namespace std::chrono_literals;
 
     while (running_) {
+        surg_.applyAging();  ortho_.applyAging();  cardio_.applyAging();
 
-        surg_.applyAging();
-        ortho_.applyAging();
-        cardio_.applyAging();
+        /* ▼▼  DODANE – aktualizacja idle / full-load  */
+        triage_.updateActivity();
+        surg_.updateActivity();
+        ortho_.updateActivity();
+        cardio_.updateActivity();
+        /* ▲▲ */
 
         std::this_thread::sleep_for(1s);
 
-        auto now     = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - start_);
+        /* nagłówek */
+        auto now      = std::chrono::steady_clock::now();
+        auto elapsed  = std::chrono::duration_cast<std::chrono::seconds>(now - start_);
         std::string simTime = hhmmss(elapsed);
 
         int active = triage_.regLen() + triage_.busy
                      + surg_.queueLen() + ortho_.queueLen() + cardio_.queueLen()
-                     + surg_.busy     + ortho_.busy      + cardio_.busy;
+                     + surg_.busy + ortho_.busy + cardio_.busy;
 
 #ifdef _WIN32
         system("cls");
 #else
         std::cout << "\033[2J\033[H" << std::flush;
 #endif
-
-        // Nagłówek główny
         std::cout << CLR_BOLD << CLR_YELLOW
                   << "==================== S O R    D A S H B O A R D ====================\n"
                   << CLR_CYAN << "Czas symulacji: " << CLR_WHITE << simTime
-                  << CLR_CYAN << "   Aktywni pacjenci: " << CLR_WHITE << std::setw(4) << active << "\n\n";
+                  << CLR_CYAN << "   Aktywni pacjenci: " << CLR_WHITE << std::setw(6) << active << "\n\n";
 
-        // Wejście i triage
+        /* wejście + triage */
         std::cout << CLR_BOLD << CLR_GREEN
                   << "[Wejscie] " << CLR_CYAN << "przyjeto: " << CLR_WHITE << arrival_.arrived()
                   << CLR_CYAN << "   w kolejce do triage: " << CLR_WHITE << triage_.regLen() << '\n'
                   << "[Triage]  pielegniarki zajete: "
                   << ((triage_.busy >= triage_.nurseCount()) ? CLR_RED : CLR_GREEN)
-                  << triage_.busy << CLR_WHITE
-                  << "/" << triage_.nurseCount()
+                  << triage_.busy << CLR_WHITE << "/" << triage_.nurseCount()
                   << CLR_CYAN << "   obsluzono: " << CLR_WHITE << triage_.done() << "\n\n";
 
-        // Oddziały
+        /* oddziały */
         std::cout << CLR_BOLD << CLR_MAGENTA
                   << "Oddzial      |  R |  Y |  G |  B | Wolni/Lek | Obsluzeni |\n"
                   << "-------------|----|----|----|----|------------|------------|\n";
-
         auto deptLine = [&](Department& d, const char* name){
             auto cnt  = d.getQueueCounts();
             int freeD = d.getFreeDoctors();
             int totD  = d.getTotalDoctors();
+
             std::cout << CLR_CYAN << std::left << std::setw(13) << name << CLR_WHITE << "|"
                       << std::right
                       << std::setw(3) << cnt[0] << " |"
@@ -97,75 +101,100 @@ void DashboardMonitor::loop() {
                       << CLR_WHITE << "   | "
                       << CLR_YELLOW << std::setw(10) << d.getServed() << CLR_WHITE << " |\n";
         };
-
         deptLine(surg_,  "Chirurgia");
         deptLine(ortho_, "Ortopedia");
         deptLine(cardio_,"Kardiologia");
         std::cout << '\n';
 
-        // Zasoby
+        /* zasoby */
+        std::map<std::string,int> delays;
+        std::vector<std::string>  renewable;
+        {
+            std::map<std::string,long> t; std::map<std::string,int> c; std::map<std::string,long> a;
+            rm_.getStats(t,c,a,delays,renewable);
+        }
         std::cout << CLR_BOLD << CLR_MAGENTA
-                  << "Zasob               | Zajete/Wszystkie | % uzycia (rolling 60 s) |\n"
-                  << "--------------------|------------------|--------------------------|\n";
+                  << "Zasob               | Zajete/Wszystkie | Odnowione | W trakcie | % uzycia |\n"
+                  << "--------------------|------------------|-----------|-----------|-----------|\n";
 
-        auto resLine = [&](const char* label, const char* key){
-            int used  = rm_.inUse(key);
-            int total = rm_.total(key);
-            int util  = int(rm_.getUtilization(key)*100 + 0.5);
+        auto resLine = [&](const char* label,const char* key){
+            bool isRen   = std::find(renewable.begin(),renewable.end(),key)!=renewable.end();
+            int totalCap = rm_.total(key);
+            int pending  = isRen ? rm_.pendingRestockCount(key) : 0;
+            int availRaw = rm_.available(key);
+
+            int effTotal = std::max(0,totalCap - pending);
+            int used     = std::max(0,(totalCap - availRaw) - pending);
+            int util     = effTotal ? int(double(used)/effTotal * 100 + 0.5) : 0;
+
+            std::string outRest = isRen ? std::to_string(rm_.restockedCount(key)) : "--";
+            std::string outPend = isRen ? std::to_string(pending)                : "--";
+
             std::cout << CLR_CYAN << std::left << std::setw(20) << label << CLR_WHITE << "| "
-                      << ((used == total) ? CLR_RED : (used == 0 ? CLR_GRAY : CLR_GREEN))
-                      << std::right << std::setw(4) << used << "/"
-                      << std::setw(3) << total << "         "
-                      << CLR_WHITE << "| "
-                      << ((util >= 90) ? CLR_RED : (util >= 50 ? CLR_YELLOW : CLR_GREEN))
+                      << ((used==effTotal&&effTotal>0)?CLR_RED:(used==0?CLR_GRAY:CLR_GREEN))
+                      << std::right << std::setw(4) << used << "/" << std::setw(3) << effTotal
+                      << "    | "
+                      << std::setw(4) << outRest << "    | "
+                      << std::setw(4) << outPend << "    | "
+                      << ((util>=90)?CLR_RED:(util>=50)?CLR_YELLOW:CLR_GREEN)
                       << std::setw(3) << util << " %" << CLR_WHITE
-                      << "                      |\n";
+                      << "         |\n";
         };
 
-        resLine("CT-scanner",  "CT");
-        resLine("RTG",         "XRAY");
-        resLine("USG",         "USG");
-        resLine("Sale oper.",  "OR");
-        resLine("Anestezjol.", "ANEST");
-        resLine("Lozka OIOM",  "ICU");
-        resLine("Defibrylatory","DEFIB");
-        resLine("Echo serca",  "ECHO");
-        resLine("Respirator",  "VENT");
-        resLine("Dializator",  "DIAL");
-        resLine("Endoskop",    "ENDO");
-        resLine("Laboratorium","LAB");
-        resLine("Zest. krwi",  "BLOOD");
-        resLine("Neuro konsult.","NEURO");
-        resLine("Zest. trauma","TRAUMA_KIT");
-        resLine("Ortho-set",   "ORTHO_SET");
+        resLine("CT-scanner",   "CT");       resLine("RTG",          "XRAY");
+        resLine("USG",          "USG");      resLine("Sale oper.",   "OR");
+        resLine("Anestezjol.",  "ANEST");    resLine("Lozka OIOM",   "ICU");
+        resLine("Defibrylatory","DEFIB");    resLine("Echo serca",   "ECHO");
+        resLine("Respirator",   "VENT");     resLine("Dializator",   "DIAL");
+        resLine("Endoskop",     "ENDO");     resLine("Laboratorium", "LAB");
+        resLine("Zest. krwi",   "BLOOD");    resLine("Neuro konsult.","NEURO");
+        resLine("Zest. trauma", "TRAUMA_KIT"); resLine("Ortho-set",  "ORTHO_SET");
+        resLine("EKG",          "EKG");
 
-        std::cout << CLR_YELLOW << "====================================================================\n" << CLR_RESET;
+        std::cout << CLR_YELLOW
+                  << "====================================================================\n"
+                  << CLR_RESET;
     }
 
-    // PODSUMOWANIE
+    auto totalRun = std::chrono::duration_cast<std::chrono::seconds>(
+            std::chrono::steady_clock::now() - start_);
+
     std::cout << CLR_BOLD << CLR_YELLOW
               << "\n=========== SYMULACJA ZAKONCZONA ===========\n"
-              << "Czas trwania symulacji: "
-              << CLR_WHITE
-              << hhmmss(std::chrono::duration_cast<std::chrono::seconds>(
-                      std::chrono::steady_clock::now() - start_)) << "\n\n";
+              << CLR_CYAN << "Czas trwania: " << CLR_WHITE << hhmmss(totalRun) << "\n\n";
 
-    std::cout << CLR_BOLD << CLR_CYAN << ">>> Statystyki pacjentow:\n"
-              << CLR_WHITE << "    Obsluzonych w triage: " << triage_.done() << "\n"
-              << "    Chirurgia:   " << surg_.getServed() << "\n"
-              << "    Ortopedia:   " << ortho_.getServed() << "\n"
-              << "    Kardiologia: " << cardio_.getServed() << "\n\n";
-
+    /* pacjenci */
+    std::cout << CLR_BOLD << CLR_CYAN << ">>> Statystyki pacjentow:\n" << CLR_WHITE
+              << "    Obsluzonych w triage: " << triage_.done()      << '\n'
+              << "    Chirurgia:   "           << surg_.getServed()  << '\n'
+              << "    Ortopedia:   "           << ortho_.getServed() << '\n'
+              << "    Kardiologia: "           << cardio_.getServed()<< "\n\n";
     gPatientLogger.summary(std::cout);
 
-    std::cout << CLR_CYAN << "Pelna lista pacjentow zapisana w: "
+    /* przestoje + full load */
+    std::cout << CLR_BOLD << CLR_CYAN << ">>> Przestoje oddzialow (ms):\n" << CLR_WHITE
+              << "  Triage:      " << triage_.getIdleTimeMs()    << '\n'
+              << "  Chirurgia:   " << surg_.getIdleTimeMs()      << '\n'
+              << "  Ortopedia:   " << ortho_.getIdleTimeMs()     << '\n'
+              << "  Kardiologia: " << cardio_.getIdleTimeMs()    << "\n\n";
+
+    std::cout << CLR_BOLD << CLR_CYAN << ">>> 100 % obciazenia (ms):\n" << CLR_WHITE
+              << "  Triage:      " << triage_.getFullLoadTimeMs() << '\n'
+              << "  Chirurgia:   " << surg_.getFullLoadTimeMs()   << '\n'
+              << "  Ortopedia:   " << ortho_.getFullLoadTimeMs()  << '\n'
+              << "  Kardiologia: " << cardio_.getFullLoadTimeMs() << "\n\n";
+
+    std::cout << CLR_CYAN << "Pelna lista pacjentow: "
               << CLR_WHITE << "out/patients.csv\n"
               << CLR_YELLOW << "===============================================\n"
               << CLR_RESET;
 }
 
-std::string DashboardMonitor::hhmmss(std::chrono::seconds s) {
-    int h = int(s.count()/3600), m = int((s.count()%3600)/60), sec = int(s.count()%60);
+std::string DashboardMonitor::hhmmss(std::chrono::seconds s)
+{
+    int h = int(s.count()/3600),
+            m = int((s.count()%3600)/60),
+            sec = int(s.count()%60);
     char buf[16];
     std::snprintf(buf,sizeof(buf),"%02d:%02d:%02d",h,m,sec);
     return buf;

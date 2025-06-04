@@ -1,55 +1,64 @@
 #ifndef SOR_RESOURCE_MANAGER_H
 #define SOR_RESOURCE_MANAGER_H
 
-#include "config.h"
-#include <map>
 #include <string>
-#include <vector>
+#include <unordered_map>
 #include <mutex>
 #include <condition_variable>
+#include <vector>
+#include <map>
 
-/* ───────────── Semaphore ───────────── */
-class Semaphore
-{
-    int                       count_;
-    mutable std::mutex        mtx_;
-    std::condition_variable   cv_;
+struct Config;
 
+class Semaphore {
 public:
-    explicit Semaphore(int n = 0) : count_(n) {}
-
+    explicit Semaphore(int count = 0) : count_(count) {}
     void acquire(int n = 1);
     void release(int n = 1);
-
     int  available() const;
+private:
+    mutable std::mutex mtx_;
+    std::condition_variable cv_;
+    int count_;
 };
 
-class ResourceManager
-{
-    std::map<std::string, Semaphore> sem_;
-    std::map<std::string, int>       total_;
-
+class ResourceManager {
 public:
-    explicit ResourceManager(const Config& cfg);
+    explicit ResourceManager(const Config& c);
 
-    void acquire (const std::string& key, int n = 1);
-    void release (const std::string& key, int n = 1);
+    void acquire(const std::string& k, int n = 1);
+    void release(const std::string& k, int n = 1);                 // TERAZ inteligentne
+    void releaseOrReplenish(const std::string& k, int n = 1);      // alias (opcjonalny)
 
-    /* szybkie dostępy */
-    int  total     (const std::string& key) const { return total_.at(key); }
-    int  available (const std::string& key) const { return sem_.at(key).available(); }
-    int  inUse     (const std::string& key) const { return total(key) - available(key); }
+    int  available(const std::string& k) const;
+    int  total(const std::string& k)     const;
+    int  inUse(const std::string& k)     const;
+    int  restockedCount   (const std::string& k) const;
+    int  pendingRestockCount(const std::string& k) const;
 
-    /* aliasy do starego kodu */
-    int  getTotal     (const std::string& k) const { return total(k);      }
-    int  getAvailable (const std::string& k) const { return available(k);  }
-    double getUtilization(const std::string& k) const;
-
-    /* nowe dla detektora deadlockow */
+    void logUsageTime(const std::string& key, long timeMs);
     std::vector<std::string> getAllKeys() const;
+
+    void getStats(std::map<std::string, long>& totalUse,
+                  std::map<std::string, int>&  usageCount,
+                  std::map<std::string, long>& avgUseMs,
+                  std::map<std::string, int>&  renewableDelays,
+                  std::vector<std::string>&    renewableList) const;
+
+private:
+    void replenishAfterMs(const std::string& k, int n, int delayMs);
+    void directRelease    (const std::string& k, int n);  // prawdziwy sem.release
+
+    /* Dane */
+    std::unordered_map<std::string, Semaphore> sem_;
+    std::unordered_map<std::string, int> total_;
+    std::unordered_map<std::string, int> renewalDelayMs_;
+    std::unordered_map<std::string, int> pendingRestock_;
+    std::unordered_map<std::string, int> restockedCount_;
+    std::unordered_map<std::string, long> usageTimeMs_;
+    std::unordered_map<std::string, int>  usageCount_;
+    mutable std::mutex mtx_;
 };
 
-/* globalny uchwyt dla lekarzy  */
 extern ResourceManager* gResMgr;
-
-#endif /* SOR_RESOURCE_MANAGER_H */
+#endif

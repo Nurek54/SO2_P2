@@ -7,45 +7,47 @@
 struct Config
 {
     /* ---------- arrival ---------- */
-    double lambdaPerSec      = 1.0;
-    bool   massEnabled       = false;
-    int    massAtSec         = 2;
-    double massRatePerSec    = 100.0;
+    double lambdaPerSec      = 0.4;
+    bool   massEnabled       = true;
+    int    massAtSec         = 5;
+    double massRatePerSec    = 1000.0;
+    int    maxPatients       = 1000;  // nowy limit
 
     /* ---------- triage_distribution ---------- */
-    double pRed    = .10;
-    double pYellow = .20;
-    double pGreen  = .50;
-    double pBlue   = .20;
+    double pRed    = 0.10;
+    double pYellow = 0.20;
+    double pGreen  = 0.50;
+    double pBlue   = 0.20;
 
     /* ---------- staff ---------- */
-    int chirurg      = 10;
-    int ortopeda     = 10;
-    int kardiolog    = 10;
-    int consultSurg  = 4;
-    int consultCard  = 3;
+    int chirurg      = 8;
+    int ortopeda     = 8;
+    int kardiolog    = 6;
+    int consultSurg  = 5;
+    int consultCard  = 4;
 
     /* ---------- equipment ---------- */
-    int ct           = 2;
-    int xray         = 3;
-    int usg          = 1;
-    int oroom        = 2;
-    int anest        = 4;
-    int icuBeds      = 3;
-    int defib        = 2;
-    int echo         = 1;
+    int ct           = 3;
+    int ekg          = 3;
     int vent         = 2;
-    int dial         = 1;
-    int endo         = 1;
-    int lab          = 1;
-    int blood        = 2;
+    int dial         = 2;
+    int lab          = 4;
+    int blood        = 4;
+    int xray         = 4;
+    int orthoSet     = 3;
+
+    int usg          = 3;
+    int oroom        = 3;
+    int anest        = 2;
+    int icuBeds      = 1;
+    int defib        = 3;
+    int echo         = 2;
+    int endo         = 2;
     int neuro        = 1;
     int traumaKit    = 3;
-    int orthoSet     = 2;
-    int ekg          = 2;
 
     /* ---------- timeouts ---------- */
-    int deadlockMs   = 8000;
+    int deadlockMs   = 20000;
     int backoffMinMs = 1000;
     int backoffMaxMs = 3000;
 

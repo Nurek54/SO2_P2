@@ -43,8 +43,7 @@ Triage::Triage(Department& s, Department& o, Department& c,
         , pGreen_(cfg.pGreen)
         , pBlue_(cfg.pBlue)
 {
-    // na sztywno 2 pielęgniarki
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < nurseCount(); ++i) {
         nurses_.emplace_back(&Triage::nurseLoop, this);
     }
 }
@@ -72,8 +71,8 @@ void Triage::join()
 void Triage::nurseLoop()
 {
     std::mt19937 gen{std::random_device{}()};
-    std::uniform_int_distribution<int>    tTime(100, 300);      // ms
-    std::uniform_int_distribution<int>    idxDist(0, D.size() - 1);
+    std::uniform_int_distribution<int> tTime(100, 300);      // ms
+    std::uniform_int_distribution<int> idxDist(0, D.size() - 1);
     std::uniform_real_distribution<double> U(0.0, 1.0);
 
     while (running_) {
@@ -100,9 +99,9 @@ void Triage::nurseLoop()
         // losowanie priorytetu wg rozkładu
         auto drawPr = [&]{
             double r = U(gen);
-            if (r < pRed_)                           return Priority::RED;
-            if (r < pRed_ + pYellow_)                return Priority::YELLOW;
-            if (r < pRed_ + pYellow_ + pGreen_)      return Priority::GREEN;
+            if (r < pRed_)            return Priority::RED;
+            if (r < pRed_ + pYellow_) return Priority::YELLOW;
+            if (r < pRed_ + pYellow_ + pGreen_) return Priority::GREEN;
             return Priority::BLUE;
         };
 
@@ -131,4 +130,25 @@ void Triage::nurseLoop()
         ++processed_;
         --busy;
     }
+}
+
+void Triage::updateActivity()
+{
+    auto now = std::chrono::steady_clock::now();
+    long elapsedMs = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastCheck_).count();
+    lastCheck_ = now;
+
+    int busyNow = busy.load();
+    if (busyNow == 0)
+        idleTimeMs_ += elapsedMs;
+    if (busyNow == nurseCount())
+        fullLoadTimeMs_ += elapsedMs;
+}
+
+long Triage::getIdleTimeMs() const {
+    return idleTimeMs_;
+}
+
+long Triage::getFullLoadTimeMs() const {
+    return fullLoadTimeMs_;
 }

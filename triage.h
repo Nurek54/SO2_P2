@@ -2,61 +2,58 @@
 #define SOR_TRIAGE_H
 
 #include "department.h"
-#include "config.h"
-#include <queue>
-#include <mutex>
-#include <thread>
-#include <condition_variable>
-#include <vector>
+#include "patient.h"
 #include <atomic>
+#include <condition_variable>
+#include <mutex>
+#include <queue>
+#include <thread>
+#include <vector>
+#include <chrono>
+#include "config.h"
 
-/* Triage: pobiera pacjentów, losuje im priorytety wg Config, przekazuje na
-    odpowiedni oddział i zbiera statystyki. */
-class Triage
-{
-    Department&            surg_;
-    Department&            ortho_;
-    Department&            cardio_;
+class Triage {
+public:
+    Triage(Department& surg, Department& ortho, Department& cardio,
+           std::atomic<bool>& running, const Config& cfg);
 
-    std::atomic<bool>&     running_;
-    std::queue<int>        regQueue_;
-    std::mutex             mtx_;
-    std::condition_variable cv_;
-    std::vector<std::thread> nurses_;
+    void newPatient(int id);
+    std::size_t regLen();
+    int nurseCount() const { return 4; }
 
-    // rozkład priorytetów z Config
-    double pRed_, pYellow_, pGreen_, pBlue_;
+    void join();
 
-    std::atomic<int>       processed_{0};
+    // Statystyki pracy
+    void updateActivity();
+    long getIdleTimeMs() const;
+    long getFullLoadTimeMs() const;
 
+    // Zmienna licząca pielęgniarki zajęte (atomic, żeby bezpiecznie w wątku)
+    std::atomic<int> busy{0};
+    int done() const { return processed_; }
+
+private:
     void nurseLoop();
 
-public:
-    std::atomic<int> busy{0};
+    std::queue<int> regQueue_;
+    mutable std::mutex mtx_;
+    std::condition_variable cv_;
 
-    /** @param s, o, c   referencje do oddziałów
-        @param run      flaga sterująca zakończeniem symulacji
-        @param cfg      konfiguracja z rozkładami priorytetów */
-    Triage(Department& s,
-           Department& o,
-           Department& c,
-           std::atomic<bool>& run,
-           const Config& cfg);
+    Department& surg_;
+    Department& ortho_;
+    Department& cardio_;
+    std::atomic<bool>& running_;
 
-    /// dodaje nowego pacjenta do kolejki rejestracji
-    void newPatient(int id);
+    double pRed_, pYellow_, pGreen_, pBlue_;
 
-    /// długość kolejki rejestracji
-    std::size_t regLen();
+    std::vector<std::thread> nurses_;
 
-    /// ile pacjentów już przerobiono przez triage
-    int done() const { return processed_.load(); }
+    int processed_ = 0;
 
-    /// ile wątków-pielęgniarek jest uruchomionych
-    int nurseCount() const { return int(nurses_.size()); }
-
-    /// czeka na zakończenie wszystkich wątków
-    void join();
+    // Statystyki czasu pracy w ms
+    long idleTimeMs_ = 0;
+    long fullLoadTimeMs_ = 0;
+    std::chrono::steady_clock::time_point lastCheck_ = std::chrono::steady_clock::now();
 };
 
-#endif /* SOR_TRIAGE_H */
+#endif // SOR_TRIAGE_H

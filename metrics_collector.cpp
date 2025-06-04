@@ -24,17 +24,31 @@ void MetricsCollector::loop()
     using namespace std::chrono;
     while (running_)
     {
-        std::this_thread::sleep_for( seconds(10) );
+        std::this_thread::sleep_for(seconds(10));
 
         auto ts = duration_cast<seconds>(
                 steady_clock::now().time_since_epoch()).count();
 
-        out_ << ts << ';'
-             << surg_.queueLen()  << ';'
-             << ortho_.queueLen() << ';'
-             << cardio_.queueLen()<< ';'
-             << rm_.available("CT") << ';'
-             << rm_.available("OR") << '\n';
+        // Kolejki w oddziałach
+        int qS  = surg_.queueLen();
+        int qO  = ortho_.queueLen();
+        int qC  = cardio_.queueLen();
+
+        // Obliczamy wykorzystanie CT i OR „na piechotę”:
+        int totCt = rm_.total("CT");
+        int inUseCt = rm_.inUse("CT");
+        double utilCt = totCt == 0 ? 0.0 : (double(inUseCt) / double(totCt));
+
+        int totOr = rm_.total("OR");
+        int inUseOr = rm_.inUse("OR");
+        double utilOr = totOr == 0 ? 0.0 : (double(inUseOr) / double(totOr));
+
+        out_ << ts   << ';'
+             << qS   << ';'
+             << qO   << ';'
+             << qC   << ';'
+             << utilCt << ';'
+             << utilOr << '\n';
 
         out_.flush();
     }
