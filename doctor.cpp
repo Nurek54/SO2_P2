@@ -145,7 +145,6 @@ void Doctor::work() {
             }
         }
 
-        // --- Dodatkowe narzędzia (wszystkie oddziały) ---
         struct ToolSpec {
             const char* key;
             double      p;

@@ -7,11 +7,11 @@
 struct Config
 {
     /* ---------- arrival ---------- */
-    double lambdaPerSec      = 0.4;
-    bool   massEnabled       = true;
+    double lambdaPerSec      = 11.0;
+    bool   massEnabled       = false;
     int    massAtSec         = 5;
     double massRatePerSec    = 1000.0;
-    int    maxPatients       = 1000;  // nowy limit
+    int    maxPatients       = -1;
 
     /* ---------- triage_distribution ---------- */
     double pRed    = 0.10;
@@ -20,8 +20,10 @@ struct Config
     double pBlue   = 0.20;
 
     /* ---------- staff ---------- */
-    int chirurg      = 8;
+    int chirurg      = 6;
     int ortopeda     = 8;
+
+
     int kardiolog    = 6;
     int consultSurg  = 5;
     int consultCard  = 4;
@@ -33,7 +35,7 @@ struct Config
     int dial         = 2;
     int lab          = 4;
     int blood        = 4;
-    int xray         = 4;
+    int xray         = 3;
     int orthoSet     = 3;
 
     int usg          = 3;

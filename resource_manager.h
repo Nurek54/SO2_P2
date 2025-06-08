@@ -27,8 +27,8 @@ public:
     explicit ResourceManager(const Config& c);
 
     void acquire(const std::string& k, int n = 1);
-    void release(const std::string& k, int n = 1);                 // TERAZ inteligentne
-    void releaseOrReplenish(const std::string& k, int n = 1);      // alias (opcjonalny)
+    void release(const std::string& k, int n = 1);
+    void releaseOrReplenish(const std::string& k, int n = 1);
 
     int  available(const std::string& k) const;
     int  total(const std::string& k)     const;
@@ -47,7 +47,7 @@ public:
 
 private:
     void replenishAfterMs(const std::string& k, int n, int delayMs);
-    void directRelease    (const std::string& k, int n);  // prawdziwy sem.release
+    void directRelease    (const std::string& k, int n);
 
     /* Dane */
     std::unordered_map<std::string, Semaphore> sem_;

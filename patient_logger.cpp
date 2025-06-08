@@ -66,7 +66,6 @@ void PatientLogger::run() {
                  << e.waitMs << '\n';
             out_.flush();
 
-            // zbiorcze
             ++count_;
             totalWait_  += e.waitMs;
             totalTreat_ += e.treatMs;

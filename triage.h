@@ -28,7 +28,6 @@ public:
     long getIdleTimeMs() const;
     long getFullLoadTimeMs() const;
 
-    // Zmienna licząca pielęgniarki zajęte (atomic, żeby bezpiecznie w wątku)
     std::atomic<int> busy{0};
     int done() const { return processed_; }
 
@@ -50,7 +49,6 @@ private:
 
     int processed_ = 0;
 
-    // Statystyki czasu pracy w ms
     long idleTimeMs_ = 0;
     long fullLoadTimeMs_ = 0;
     std::chrono::steady_clock::time_point lastCheck_ = std::chrono::steady_clock::now();

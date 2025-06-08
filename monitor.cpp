@@ -44,16 +44,13 @@ void DashboardMonitor::loop() {
     while (running_) {
         surg_.applyAging();  ortho_.applyAging();  cardio_.applyAging();
 
-        /* ▼▼  DODANE – aktualizacja idle / full-load  */
         triage_.updateActivity();
         surg_.updateActivity();
         ortho_.updateActivity();
         cardio_.updateActivity();
-        /* ▲▲ */
 
         std::this_thread::sleep_for(1s);
 
-        /* nagłówek */
         auto now      = std::chrono::steady_clock::now();
         auto elapsed  = std::chrono::duration_cast<std::chrono::seconds>(now - start_);
         std::string simTime = hhmmss(elapsed);

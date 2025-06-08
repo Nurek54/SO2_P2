@@ -28,7 +28,7 @@ void Department::applyAging()
     };
 
     queue_.applyAging(agingThreshold, now);
-    updateActivity();  // <- dodane
+    updateActivity();
 }
 
 void Department::updateActivity()

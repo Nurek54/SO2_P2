@@ -33,14 +33,13 @@ void Hospital::run()
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
         if (cfg_.maxPatients > 0) {
-            // ✅ poprawka: zliczaj tylko pacjentów obsłużonych przez lekarzy
             int totalHandled = surg_.getServed()
                                + ortho_.getServed()
                                + cardio_.getServed();
 
             if (totalHandled >= cfg_.maxPatients) {
-                std::cout << "[Hospital] Wszyscy pacjenci (" << totalHandled
-                          << "/" << cfg_.maxPatients << ") zostali obsłużeni.\n";
+                /*std::cout << "[Hospital] Wszyscy pacjenci (" << totalHandled
+                          << "/" << cfg_.maxPatients << ") zostali obsłużeni.\n";*/
                 running_ = false;
             }
         }
